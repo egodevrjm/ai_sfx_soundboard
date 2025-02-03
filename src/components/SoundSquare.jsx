@@ -11,9 +11,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-const SoundSquare = ({ masterVolume = 1 }) => {
+const SoundSquare = ({ masterVolume = 1, data = null, onUpdate = () => {} }) => {
   const [audioUrl, setAudioUrl] = useState(null);
-  const [soundName, setSoundName] = useState('');
+  const [soundName, setSoundName] = useState(data?.soundName || '');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLooping, setIsLooping] = useState(false);
@@ -25,6 +25,28 @@ const SoundSquare = ({ masterVolume = 1 }) => {
   const loopTimeoutRef = useRef(null);
 
   const API_KEY = import.meta.env.VITE_ELEVENLABS_API_KEY;
+
+  // Keep track of the original prompt
+  const [prompt, setPrompt] = useState(data?.prompt || '');
+
+  // Update parent component when state changes
+  useEffect(() => {
+    if (prompt || soundName) {
+      onUpdate({
+        prompt,
+        soundName,
+      });
+    } else {
+      onUpdate(null);
+    }
+  }, [prompt, soundName]);
+
+  // Regenerate sound if data contains a prompt
+  useEffect(() => {
+    if (data?.prompt && !audioUrl) {
+      generateSound(data.prompt);
+    }
+  }, [data?.prompt]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -49,6 +71,7 @@ const SoundSquare = ({ masterVolume = 1 }) => {
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       setAudioUrl(url);
+      setPrompt(prompt);
       setSoundName(prompt.slice(0, 20) + (prompt.length > 20 ? '...' : ''));
     } catch (err) {
       console.error('Error generating sound:', err);
@@ -84,6 +107,7 @@ const SoundSquare = ({ masterVolume = 1 }) => {
   const handleClear = () => {
     handleStop();
     setAudioUrl(null);
+    setPrompt('');
     setSoundName('');
   };
 

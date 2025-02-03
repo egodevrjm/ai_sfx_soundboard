@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Settings, Volume2 } from 'lucide-react';
 import SoundSquare from './components/SoundSquare';
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,8 +12,60 @@ import {
 
 function App() {
   const [masterVolume, setMasterVolume] = useState(1);
-  const squares = Array.from({ length: 25 }); // 5x5 grid = 25 squares
+  const [squares, setSquares] = useState(Array(25).fill(null));
+  const fileInputRef = useRef(null);
   
+  // Function to handle clearing all sounds
+  const handleClearAll = () => {
+    setSquares(Array(25).fill(null));
+  };
+
+  // Function to export board configuration
+  const handleExport = () => {
+    const boardConfig = {
+      squares: squares.map(square => square ? {
+        prompt: square.prompt,
+        soundName: square.soundName
+      } : null),
+      version: "1.0"
+    };
+    
+    const blob = new Blob([JSON.stringify(boardConfig, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'soundboard-config.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  // Function to handle importing board configuration
+  const handleImport = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const config = JSON.parse(e.target.result);
+          if (config.squares) {
+            setSquares(config.squares);
+          }
+        } catch (error) {
+          console.error('Error importing configuration:', error);
+          alert('Invalid configuration file');
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  // Function to trigger file input click
+  const triggerImport = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 p-6">
       <Card className="max-w-4xl mx-auto bg-gray-800/50 border-gray-700">
@@ -49,26 +101,41 @@ function App() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => window.location.reload()}>
                     Clear All Sounds
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  {/* <DropdownMenuItem onClick={handleExport}>
                     Export Board
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={triggerImport}>
                     Import Board
-                  </DropdownMenuItem>
+                  </DropdownMenuItem> */}
                 </DropdownMenuContent>
               </DropdownMenu>
+
+              {/* Hidden file input for import */}
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImport}
+                accept=".json"
+                style={{ display: 'none' }}
+              />
             </div>
           </div>
           
           {/* Sound Grid - 5x5 grid */}
           <div className="grid grid-cols-5 gap-4">
-            {squares.map((_, index) => (
+            {squares.map((squareData, index) => (
               <SoundSquare 
                 key={index}
                 masterVolume={masterVolume}
+                data={squareData}
+                onUpdate={(newData) => {
+                  const newSquares = [...squares];
+                  newSquares[index] = newData;
+                  setSquares(newSquares);
+                }}
               />
             ))}
           </div>
