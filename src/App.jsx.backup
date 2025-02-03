@@ -1,0 +1,23 @@
+import React from 'react';
+import SoundSquare from './components/SoundSquare';
+
+function App() {
+  const squares = Array.from({ length: 25 }); // Changed to 5x5 grid
+  
+  return (
+    <div className="min-h-screen bg-gray-900 p-6">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-4xl font-bold text-white text-center mb-8">
+          AI Sound Board
+        </h1>
+        
+        {/* Fixed grid layout - explicitly 5 columns */}
+        <div className="grid grid-cols-5 gap-4">
+          {squares.map((_, index) => (
+            <SoundSquare key={index} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
