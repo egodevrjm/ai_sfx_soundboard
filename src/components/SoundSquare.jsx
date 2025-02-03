@@ -24,7 +24,7 @@ const SoundSquare = ({ masterVolume = 1, data = null, onUpdate = () => {} }) => 
   const audioRef = useRef(null);
   const loopTimeoutRef = useRef(null);
 
-  const API_KEY = import.meta.env.VITE_ELEVENLABS_API_KEY;
+  const API_KEY = localStorage.getItem('elevenLabsApiKey') || import.meta.env.VITE_ELEVENLABS_API_KEY;
 
   // Keep track of the original prompt
   const [prompt, setPrompt] = useState(data?.prompt || '');

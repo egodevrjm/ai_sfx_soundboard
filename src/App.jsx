@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import ApiKeyInput from './components/ApiKeyInput';
 import { Settings, Volume2 } from 'lucide-react';
 import SoundSquare from './components/SoundSquare';
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,6 +15,7 @@ function App() {
   const [masterVolume, setMasterVolume] = useState(1);
   const [squares, setSquares] = useState(Array(25).fill(null));
   const fileInputRef = useRef(null);
+  const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
   
   // Function to handle clearing all sounds
   const handleClearAll = () => {
@@ -101,6 +103,9 @@ function App() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => setIsApiKeyModalOpen(true)}>
+                    Set API Key
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => window.location.reload()}>
                     Clear All Sounds
                   </DropdownMenuItem>
@@ -141,6 +146,10 @@ function App() {
           </div>
         </CardContent>
       </Card>
+      <ApiKeyInput 
+        isOpen={isApiKeyModalOpen}
+        onClose={() => setIsApiKeyModalOpen(false)}
+      />
     </div>
   );
 }
