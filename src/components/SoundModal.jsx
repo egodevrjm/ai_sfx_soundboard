@@ -75,13 +75,13 @@ const SoundModal = ({ isOpen, onClose, onGenerate }) => {
             </label>
             <div className="grid grid-cols-2 gap-2">
               {EXAMPLE_PROMPTS.map((example) => (
-                <Button
-                  key={example}
-                  type="button"
-                  variant="outline"
-                  className="text-left h-auto py-2 text-sm"
-                  onClick={() => handleExampleClick(example)}
-                >
+               <Button
+                key={example}
+                type="button"
+                variant="outline"
+                className="text-left h-auto py-2 text-sm text-gray-200 hover:text-white border-gray-700"
+                onClick={() => handleExampleClick(example)}
+              >
                   {example}
                 </Button>
               ))}
