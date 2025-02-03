@@ -79,7 +79,7 @@ const SoundModal = ({ isOpen, onClose, onGenerate }) => {
                 key={example}
                 type="button"
                 variant="outline"
-                className="text-left h-auto py-2 text-sm text-gray-200 hover:text-white border-gray-700"
+                className="text-left h-auto py-2 text-sm text-black hover:text-gray-900 bg-white hover:bg-gray-50 border-gray-300"
                 onClick={() => handleExampleClick(example)}
               >
                   {example}
