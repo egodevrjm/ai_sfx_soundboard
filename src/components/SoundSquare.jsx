@@ -130,8 +130,8 @@ const SoundSquare = ({ masterVolume = 1 }) => {
           onClick={handleClick}
           className={`w-full aspect-square rounded-lg transition-all duration-100 flex flex-col items-center justify-center gap-2
             ${audioUrl 
-              ? 'bg-gradient-to-br from-red-600 to-red-700 hover:from-red-700 hover:to-red-800' 
-              : 'bg-gradient-to-br from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700'} 
+                ? 'bg-gradient-to-br from-green-400 to-green-500 hover:from-green-500 hover:to-green-600' 
+                : 'bg-gradient-to-br from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700'}
             ${isPlaying ? 'scale-95' : 'scale-100'}
             min-h-[120px]`}
         >
@@ -155,7 +155,7 @@ const SoundSquare = ({ masterVolume = 1 }) => {
 
         {/* Control panel */}
         {audioUrl && showControls && (
-          <div className="absolute bottom-full left-0 w-full bg-gray-800 rounded-t-lg p-3 shadow-lg mb-1 border border-gray-700">
+            <div className="absolute bottom-full left-0 w-full bg-gray-800 rounded-t-lg p-3 shadow-lg mb-1 border border-gray-700 z-50">
             {/* Clear button */}
             <div className="flex justify-end mb-2">
               <Tooltip>
